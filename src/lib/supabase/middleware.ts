@@ -27,15 +27,16 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // This will refresh session if expired - required for Server Components
-  const { data: { user } } = await supabase.auth.getUser()
+  // Use getSession instead of getUser for lightning fast local JWT parsing.
+  // This prevents the "5 second tab switch" issue caused by network requests during prefetching.
+  const { data: { session } } = await supabase.auth.getSession()
 
   // Protect all routes starting with /admin, except /admin/login
   if (
     request.nextUrl.pathname.startsWith('/admin') &&
     !request.nextUrl.pathname.startsWith('/admin/login')
   ) {
-    if (!user) {
+    if (!session) {
       // no user, redirect to login page
       const url = request.nextUrl.clone()
       url.pathname = '/admin/login'
@@ -44,7 +45,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // If user is already logged in and tries to access login page, redirect to admin
-  if (request.nextUrl.pathname.startsWith('/admin/login') && user) {
+  if (request.nextUrl.pathname.startsWith('/admin/login') && session) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin'
     return NextResponse.redirect(url)
