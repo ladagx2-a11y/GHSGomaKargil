@@ -5,8 +5,6 @@ import { SchoolTimeline } from "@/components/SchoolTimeline";
 import { CommunityVoices } from "@/components/CommunityVoices";
 import { StoriesSection } from "@/components/StoriesSection";
 import { ComplianceGrid } from "@/components/ComplianceGrid";
-import { CampusShowcase } from "@/components/CampusShowcase";
-import { Announcements } from "@/components/Announcements";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {

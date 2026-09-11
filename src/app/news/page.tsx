@@ -107,7 +107,7 @@ export default function NewsPage() {
                       <div className="absolute top-4 right-4 bg-white/95 dark:bg-[#0b0f14]/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
                         <Calendar size={12} className="text-[#004e89] dark:text-[#cfa861]" />
                         <span className="text-xs font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
-                          {new Date(story.created_at || story.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          {new Date(story.created_at || story.published_at || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </span>
                       </div>
                     </div>

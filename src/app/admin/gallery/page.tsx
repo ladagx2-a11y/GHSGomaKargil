@@ -96,12 +96,12 @@ export default function GalleryManagement() {
       ) : (
         <div className="space-y-10">
           {Object.entries(
-            filteredImages.reduce((acc, img) => {
+            filteredImages.reduce((acc: Record<string, any[]>, img: any) => {
               if (!acc[img.category]) acc[img.category] = []
               acc[img.category].push(img)
               return acc
-            }, {} as Record<string, typeof images>)
-          ).map(([category, imgs]) => (
+            }, {})
+          ).map(([category, imgs]: [string, any[]]) => (
             <div key={category} className="space-y-4">
               <div className="flex items-center gap-3 border-b border-white/10 pb-3">
                 <h3 className="text-xl font-bold text-white tracking-wide">{category}</h3>
@@ -109,7 +109,7 @@ export default function GalleryManagement() {
               </div>
               
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {imgs.map(img => (
+                {imgs.map((img: any) => (
                   <div key={img.id} className="group relative bg-[#111720] rounded-xl overflow-hidden aspect-square border border-white/5">
                     {img.image_url ? (
                       <img src={img.image_url} alt={img.title} className="w-full h-full object-cover" loading="lazy" />
