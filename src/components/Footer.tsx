@@ -64,7 +64,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <Mail size={16} className="shrink-0 text-[#6ebcb5]" />
-                <span>ghsgomakargil@edu.in</span>
+                <a href="mailto:hsgoma12@gmail.com" className="hover:text-white transition-colors">hsgoma12@gmail.com</a>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <Clock size={16} className="shrink-0 text-[#6ebcb5]" />
