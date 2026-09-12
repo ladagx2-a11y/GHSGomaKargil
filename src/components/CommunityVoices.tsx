@@ -82,11 +82,17 @@ export function CommunityVoices() {
                         isActive ? 'ml-2' : 'hover:ml-2'
                       }`}
                     >
-                      <div className="relative z-10 pr-4">
-                        <h3 className={`text-xl md:text-2xl font-bold mb-1 transition-colors ${
+                      <div className="relative z-10 pr-4 w-full">
+                        <h3 className={`text-xl md:text-2xl font-bold mb-1 transition-colors flex items-center gap-4 ${
                           isActive ? 'text-white' : 'text-white/60 group-hover:text-white/90'
                         }`} style={{ fontFamily: 'var(--font-lora)' }}>
-                          {voice.name}
+                          <span className="shrink-0">{voice.name}</span>
+                          {isActive && (
+                            <motion.div 
+                              layoutId="activeLine"
+                              className="w-full max-w-[150px] h-[3px] bg-[#cfa861]"
+                            />
+                          )}
                         </h3>
                         <p className={`text-[10px] md:text-xs font-bold tracking-widest uppercase transition-colors ${
                           isActive ? 'text-[#cfa861]' : 'text-white/40 group-hover:text-white/70'
@@ -95,14 +101,13 @@ export function CommunityVoices() {
                         </p>
                       </div>
 
-                      {/* Active Indicator (Triangle + Line) */}
+                      {/* Active Indicator (Triangle) */}
                       {isActive && (
                         <motion.div 
                           layoutId="activeIndicator"
-                          className="absolute left-[-12px] top-0 bottom-0 right-0 flex items-center pointer-events-none"
+                          className="absolute left-[-12px] top-4 flex items-center pointer-events-none"
                         >
-                          <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[8px] border-l-[#cfa861] border-b-[6px] border-b-transparent shrink-0 mt-[-24px]" />
-                          <div className="flex-1 h-[2px] bg-[#cfa861] ml-auto mr-0 self-center" style={{ width: 'calc(100% - 250px)', minWidth: '40px' }} />
+                          <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[8px] border-l-[#cfa861] border-b-[6px] border-b-transparent shrink-0" />
                         </motion.div>
                       )}
                     </div>
