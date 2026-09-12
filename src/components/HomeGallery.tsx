@@ -15,8 +15,6 @@ export function HomeGallery() {
       const { data, error } = await supabase
         .from('gallery_images')
         .select('*')
-        .eq('is_featured', true)
-        .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false })
         .limit(6)
       
