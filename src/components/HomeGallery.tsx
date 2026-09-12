@@ -50,54 +50,40 @@ export function HomeGallery() {
           </Link>
         </div>
 
-        {/* Asymmetrical CSS Grid (Designed for exactly 4 images) */}
-        <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[300px] md:auto-rows-[250px] gap-4 md:gap-6">
-          {images.map((img, index) => {
-            // Asymmetrical layout styling
-            let gridClass = 'col-span-1 row-span-1'
-            if (images.length === 4) {
-              if (index === 0) gridClass = 'md:col-span-2 md:row-span-2'
-              else if (index === 1) gridClass = 'md:col-span-2 md:row-span-1'
-              else if (index === 2) gridClass = 'md:col-span-1 md:row-span-1'
-              else if (index === 3) gridClass = 'md:col-span-1 md:row-span-1'
-            } else {
-              // Fallback if less than 4 images
-              gridClass = 'md:col-span-2 md:row-span-1'
-            }
-
-            return (
-              <div 
-                key={img.id} 
-                className={`relative group rounded-2xl overflow-hidden shadow-lg bg-[#080b0f] ${gridClass}`}
-              >
-                {img.image_url ? (
-                  <Image 
-                    src={img.image_url} 
-                    alt={img.title || 'Gallery Image'} 
-                    fill 
-                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon size={48} className="text-white/10" />
-                  </div>
-                )}
-                
-                {/* Gradient Overlay (Darkens on hover) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
-                
-                {/* Text Content */}
-                <div className="absolute bottom-0 left-0 p-6 md:p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <span className="text-[#cfa861] text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] drop-shadow-md">
-                    {img.category || 'Featured'}
-                  </span>
-                  <h3 className="text-white font-bold text-xl md:text-2xl leading-tight mt-2 drop-shadow-lg" style={{ fontFamily: 'var(--font-lora)' }}>
-                    {img.title}
-                  </h3>
+        {/* Masonry Layout - Dynamic to image size */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 md:gap-6 space-y-4 md:space-y-6">
+          {images.map((img) => (
+            <div 
+              key={img.id} 
+              className="break-inside-avoid relative group rounded-2xl overflow-hidden shadow-lg bg-[#080b0f]"
+            >
+              {img.image_url ? (
+                <img 
+                  src={img.image_url} 
+                  alt={img.title || 'Gallery Image'} 
+                  className="w-full h-auto block group-hover:scale-105 transition-transform duration-700 ease-out" 
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full aspect-square flex items-center justify-center">
+                  <ImageIcon size={48} className="text-white/10" />
                 </div>
+              )}
+              
+              {/* Gradient Overlay (Darkens on hover) */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              
+              {/* Text Content */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                <span className="text-[#cfa861] text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] drop-shadow-md">
+                  {img.category || 'Featured'}
+                </span>
+                <h3 className="text-white font-bold text-lg md:text-xl leading-tight mt-1 drop-shadow-lg" style={{ fontFamily: 'var(--font-lora)' }}>
+                  {img.title}
+                </h3>
               </div>
-            )
-          })}
+            </div>
+          ))}
         </div>
 
       </div>
