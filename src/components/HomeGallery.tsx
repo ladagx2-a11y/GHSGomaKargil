@@ -10,13 +10,15 @@ export function HomeGallery() {
   const [images, setImages] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
+  const [dimensions, setDimensions] = useState<Record<string, 'landscape' | 'portrait' | 'square'>>({})
+
   useEffect(() => {
     const fetchGallery = async () => {
       const { data, error } = await supabase
         .from('gallery_images')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(7) // Increased to 7 to perfectly match the reference grid layout
+        .limit(6)
       
       if (data && !error) setImages(data)
       setLoading(false)
@@ -48,27 +50,21 @@ export function HomeGallery() {
           </Link>
         </div>
 
-        {/* Custom Magazine Grid (Matches Reference Image) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[120px] md:auto-rows-[160px] gap-2 md:gap-3">
-          {images.map((img, index) => {
-            // Replicating the exact reference grid layout
-            let gridClass = 'col-span-1 row-span-1'
-            if (images.length >= 7) {
-              if (index === 0) gridClass = 'col-span-2 row-span-2' // Large tall left
-              else if (index === 1) gridClass = 'col-span-1 row-span-1' // Top middle
-              else if (index === 2) gridClass = 'col-span-1 row-span-1' // Top right
-              else if (index === 3) gridClass = 'col-span-2 row-span-1' // Middle right (wide)
-              else if (index === 4) gridClass = 'col-span-2 row-span-1' // Bottom left (wide)
-              else if (index === 5) gridClass = 'col-span-1 row-span-1' // Bottom middle
-              else if (index === 6) gridClass = 'col-span-1 row-span-1' // Bottom right
-            } else {
-              gridClass = 'col-span-2 row-span-1'
-            }
+        {/* Dynamic Aspect-Ratio Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[150px] md:auto-rows-[200px] grid-flow-row-dense gap-3 md:gap-4">
+          {images.map((img) => {
+            const layout = dimensions[img.id] || 'square' // default before load
+            
+            // Assign grid spans based on actual image dimensions
+            let spanClass = 'col-span-1 row-span-1'
+            if (layout === 'landscape') spanClass = 'col-span-2 row-span-1'
+            else if (layout === 'portrait') spanClass = 'col-span-1 row-span-2'
+            else if (layout === 'square') spanClass = 'col-span-1 row-span-1'
 
             return (
               <div 
                 key={img.id} 
-                className={`break-inside-avoid relative group rounded-xl overflow-hidden shadow-sm bg-[#080b0f] ${gridClass}`}
+                className={`relative group rounded-xl overflow-hidden shadow-md bg-[#080b0f] transition-all duration-500 ${spanClass}`}
               >
                 {img.image_url ? (
                   <img 
@@ -76,6 +72,15 @@ export function HomeGallery() {
                     alt={img.title || 'Gallery Image'} 
                     className="w-full h-full object-cover block group-hover:scale-105 transition-transform duration-700 ease-out" 
                     loading="lazy"
+                    onLoad={(e) => {
+                      const { naturalWidth, naturalHeight } = e.currentTarget
+                      const ratio = naturalWidth / naturalHeight
+                      let type: 'landscape' | 'portrait' | 'square' = 'square'
+                      if (ratio > 1.2) type = 'landscape'
+                      else if (ratio < 0.8) type = 'portrait'
+                      
+                      setDimensions(prev => ({ ...prev, [img.id]: type }))
+                    }}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
@@ -87,11 +92,11 @@ export function HomeGallery() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 
                 {/* Text Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-                  <span className="text-[#cfa861] text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] drop-shadow-md block mb-1">
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                  <span className="text-[#cfa861] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] drop-shadow-md block mb-1">
                     {img.category || 'Featured'}
                   </span>
-                  <h3 className="text-white font-bold text-xs md:text-sm leading-tight drop-shadow-lg truncate" style={{ fontFamily: 'var(--font-lora)' }}>
+                  <h3 className="text-white font-bold text-sm md:text-base leading-tight drop-shadow-lg" style={{ fontFamily: 'var(--font-lora)' }}>
                     {img.title}
                   </h3>
                 </div>
