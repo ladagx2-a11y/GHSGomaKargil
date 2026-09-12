@@ -4,6 +4,7 @@ import { AboutSection } from "@/components/AboutSection";
 import { SchoolTimeline } from "@/components/SchoolTimeline";
 import { CommunityVoices } from "@/components/CommunityVoices";
 import { StoriesSection } from "@/components/StoriesSection";
+import { HomeGallery } from "@/components/HomeGallery";
 import { ComplianceGrid } from "@/components/ComplianceGrid";
 import { Footer } from "@/components/Footer";
 
@@ -23,6 +24,9 @@ export default function Home() {
 
       {/* 1.5 Stories & Highlights Section */}
       <StoriesSection />
+
+      {/* Gallery Showcase */}
+      <HomeGallery />
 
       {/* 2. Public Documents Section */}
       <section id="documents" className="py-24 px-6 bg-gray-50 dark:bg-[#0a0f16] border-y border-gray-100 dark:border-white/5 transition-colors">
