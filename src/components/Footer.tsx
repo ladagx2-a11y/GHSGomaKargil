@@ -95,10 +95,6 @@ export function Footer() {
             <p className="text-gray-600 text-xs flex items-center gap-1">
               Made with <span className="text-red-500 mx-0.5">❤️</span> in Ladakh by <a href="https://ladagx.com" target="_blank" rel="noreferrer" className="text-gray-400 font-bold hover:text-white transition-colors">Ladagx</a>
             </p>
-            <div className="hidden sm:block w-[1px] h-3 bg-white/10" />
-            <Link href="/admin" className="text-gray-500 text-xs font-bold hover:text-[#cfa861] transition-colors uppercase tracking-widest">
-              Admin
-            </Link>
           </div>
         </div>
       </div>
