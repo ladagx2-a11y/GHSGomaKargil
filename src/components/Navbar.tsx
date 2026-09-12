@@ -63,7 +63,7 @@ export function Navbar() {
         <div className="flex md:hidden items-center gap-4">
           <button 
             onClick={() => setMobileOpen(!mobileOpen)} 
-            className={`p-2 transition-colors relative z-50 ${scrolled ? 'text-gray-900 dark:text-gray-100 hover:text-[#cfa861]' : 'text-white hover:text-[#cfa861]'}`}
+            className={`p-2 transition-colors relative z-50 ${(scrolled || mobileOpen) ? 'text-gray-900 dark:text-gray-100 hover:text-[#cfa861]' : 'text-white hover:text-[#cfa861]'}`}
             aria-label="Toggle Menu"
           >
             {mobileOpen ? <X size={28} /> : <Menu size={28} />}
