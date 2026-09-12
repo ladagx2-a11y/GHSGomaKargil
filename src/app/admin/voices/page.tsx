@@ -12,6 +12,7 @@ export default function VoicesManagement() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingVoice, setEditingVoice] = useState<any>(null)
+  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null)
 
   const fetchVoices = async () => {
     setLoading(true)
@@ -44,6 +45,42 @@ export default function VoicesManagement() {
   const openEditModal = (voice: any) => {
     setEditingVoice(voice)
     setIsModalOpen(true)
+  }
+
+  // Drag and Drop Handlers
+  const handleDragStart = (index: number) => {
+    setDraggedItemIndex(index)
+  }
+
+  const handleDragEnter = (index: number) => {
+    if (draggedItemIndex === null || draggedItemIndex === index) return
+
+    // Reorder the array locally
+    const newVoices = [...voices]
+    const draggedItem = newVoices[draggedItemIndex]
+    newVoices.splice(draggedItemIndex, 1)
+    newVoices.splice(index, 0, draggedItem)
+    
+    setDraggedItemIndex(index)
+    setVoices(newVoices)
+  }
+
+  const handleDragEnd = async () => {
+    setDraggedItemIndex(null)
+    
+    // Save new sort order to Supabase
+    const updates = voices.map((voice, index) => ({
+      id: voice.id,
+      name: voice.name,
+      role: voice.role,
+      quote: voice.quote,
+      image_url: voice.image_url,
+      is_active: voice.is_active,
+      details_link: voice.details_link,
+      sort_order: index, // New order
+    }))
+
+    await supabase.from('community_voices').upsert(updates)
   }
 
   const filteredVoices = voices.filter(v => 
@@ -110,8 +147,21 @@ export default function VoicesManagement() {
                   </td>
                 </tr>
               ) : (
-                filteredVoices.map((voice) => (
-                  <tr key={voice.id} className={`hover:bg-white/[0.02] transition-colors ${!voice.is_active ? 'opacity-50' : ''}`}>
+                voices.map((voice, index) => {
+                  // Only apply search filter for display, but keep original index for drag and drop to work correctly
+                  const matchesSearch = voice.name.toLowerCase().includes(searchQuery.toLowerCase()) || voice.role.toLowerCase().includes(searchQuery.toLowerCase())
+                  if (searchQuery && !matchesSearch) return null;
+
+                  return (
+                  <tr 
+                    key={voice.id} 
+                    draggable
+                    onDragStart={() => handleDragStart(index)}
+                    onDragEnter={() => handleDragEnter(index)}
+                    onDragEnd={handleDragEnd}
+                    onDragOver={(e) => e.preventDefault()}
+                    className={`hover:bg-white/[0.02] transition-colors ${!voice.is_active ? 'opacity-50' : ''} ${draggedItemIndex === index ? 'opacity-30 bg-white/5' : ''}`}
+                  >
                     <td className="p-4 cursor-grab active:cursor-grabbing text-gray-600">
                       <MoveVertical size={18} />
                     </td>
@@ -167,7 +217,8 @@ export default function VoicesManagement() {
                       </div>
                     </td>
                   </tr>
-                ))
+                  )
+                })
               )}
             </tbody>
           </table>
