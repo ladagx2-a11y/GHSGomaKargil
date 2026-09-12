@@ -18,7 +18,7 @@ export function HomeGallery() {
         .eq('is_featured', true)
         .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false })
-        .limit(4)
+        .limit(6)
       
       if (data && !error) setImages(data)
       setLoading(false)
@@ -51,11 +51,11 @@ export function HomeGallery() {
         </div>
 
         {/* Masonry Layout - Dynamic to image size */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 md:gap-6 space-y-4 md:space-y-6">
+        <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3 md:gap-4 space-y-3 md:space-y-4">
           {images.map((img) => (
             <div 
               key={img.id} 
-              className="break-inside-avoid relative group rounded-2xl overflow-hidden shadow-lg bg-[#080b0f]"
+              className="break-inside-avoid relative group rounded-xl overflow-hidden shadow-md bg-[#080b0f]"
             >
               {img.image_url ? (
                 <img 
@@ -66,19 +66,19 @@ export function HomeGallery() {
                 />
               ) : (
                 <div className="w-full aspect-square flex items-center justify-center">
-                  <ImageIcon size={48} className="text-white/10" />
+                  <ImageIcon size={32} className="text-white/10" />
                 </div>
               )}
               
               {/* Gradient Overlay (Darkens on hover) */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               
               {/* Text Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-                <span className="text-[#cfa861] text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] drop-shadow-md">
+              <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                <span className="text-[#cfa861] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] drop-shadow-md block mb-1">
                   {img.category || 'Featured'}
                 </span>
-                <h3 className="text-white font-bold text-lg md:text-xl leading-tight mt-1 drop-shadow-lg" style={{ fontFamily: 'var(--font-lora)' }}>
+                <h3 className="text-white font-bold text-sm md:text-base leading-tight drop-shadow-lg" style={{ fontFamily: 'var(--font-lora)' }}>
                   {img.title}
                 </h3>
               </div>
