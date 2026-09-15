@@ -17,9 +17,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 
   if (data) {
     // Find the document where the actual filename (from file_url) matches the slug
+    // For old documents with random number filenames, fallback to checking the title
     const document = data.find(doc => {
       if (!doc.file_url) return false
       const fileName = doc.file_url.split('/').pop()?.replace('.pdf', '') || ''
+      const isRandomNumber = /^0\.\d{10,}$/.test(fileName)
+      
+      if (isRandomNumber) {
+        const cleanTitle = doc.title.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+        return cleanTitle === slug.toLowerCase()
+      }
+      
       return fileName.toLowerCase() === slug.toLowerCase()
     })
 

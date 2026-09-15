@@ -74,12 +74,18 @@ export function ComplianceGrid() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3, delay: idx * 0.05 }}
               >
-                <a 
-                  href={doc.file_url !== '#' ? `/${doc.file_url.split('/').pop()?.replace('.pdf', '')}` : undefined}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center p-5 bg-white dark:bg-[#1a2230] hover:bg-gray-50 dark:hover:bg-[#202938] rounded-xl border border-gray-200 dark:border-white/5 shadow-sm hover:shadow-md transition-all group"
-                >
+                {(() => {
+                  const filePart = doc.file_url.split('/').pop()?.replace('.pdf', '') || ''
+                  const isRandomNumber = /^0\.\d{10,}$/.test(filePart)
+                  const slug = isRandomNumber ? doc.title.replace(/[^a-zA-Z0-9]/g, '') : filePart
+                  
+                  return (
+                    <a 
+                      href={doc.file_url !== '#' ? `/${slug}` : undefined}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center p-5 bg-white dark:bg-[#1a2230] hover:bg-gray-50 dark:hover:bg-[#202938] rounded-xl border border-gray-200 dark:border-white/5 shadow-sm hover:shadow-md transition-all group"
+                    >
                   <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-500 flex items-center justify-center shrink-0 mr-4 group-hover:scale-110 transition-transform">
                     <FileText size={24} />
                   </div>
