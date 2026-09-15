@@ -101,6 +101,8 @@ export function ComplianceGrid() {
                     <ExternalLink size={20} />
                   </div>
                 </a>
+                )
+              })()}
               </motion.div>
             ))}
           </AnimatePresence>
