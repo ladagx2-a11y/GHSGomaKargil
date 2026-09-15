@@ -36,10 +36,9 @@ export function DocumentModal({ isOpen, onClose, document, onSuccess }: Document
       let file_url = document?.file_url || ''
 
       if (file) {
-        // Simple file upload directly to supabase storage
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${Math.random()}.${fileExt}`
-        const filePath = `documents/${fileName}`
+        // Clean original filename: replace spaces with underscores, keep alphanumerics and dots
+        const cleanName = file.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_.-]/g, '')
+        const filePath = `documents/${cleanName}`
 
         const { error: uploadError, data } = await supabase.storage
           .from('public-documents')

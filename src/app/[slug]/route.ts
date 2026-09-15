@@ -16,10 +16,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     .eq('status', 'active')
 
   if (data) {
-    // Find the document where the title (stripped of all non-alphanumeric characters) matches the slug
+    // Find the document where the actual filename (from file_url) matches the slug
     const document = data.find(doc => {
-      const cleanTitle = doc.title.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
-      return cleanTitle === slug.toLowerCase()
+      if (!doc.file_url) return false
+      const fileName = doc.file_url.split('/').pop()?.replace('.pdf', '') || ''
+      return fileName.toLowerCase() === slug.toLowerCase()
     })
 
     if (document && document.file_url) {
