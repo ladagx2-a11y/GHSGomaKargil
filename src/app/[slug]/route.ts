@@ -32,8 +32,20 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     })
 
     if (document && document.file_url) {
-      // Redirect to the actual Supabase PDF URL
-      return NextResponse.redirect(document.file_url)
+      // Instead of redirecting (which changes the URL in the address bar),
+      // we fetch the file from Supabase and stream it directly to the user.
+      // This keeps the clean URL in the browser and hides the Supabase URL entirely!
+      try {
+        const res = await fetch(document.file_url)
+        return new NextResponse(res.body, {
+          headers: {
+            'Content-Type': res.headers.get('Content-Type') || 'application/pdf',
+            'Content-Disposition': `inline; filename="${slug}.pdf"`,
+          },
+        })
+      } catch (err) {
+        return NextResponse.redirect(document.file_url) // Fallback to redirect if fetch fails
+      }
     }
   }
 
