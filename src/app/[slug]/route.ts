@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
-  const slug = params.slug
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
 
   // Ignore requests for static files (e.g. favicon.ico, images)
   if (slug.includes('.')) {
